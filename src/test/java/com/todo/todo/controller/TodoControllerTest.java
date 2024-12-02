@@ -102,4 +102,17 @@ public class TodoControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.text").value("Edited todo item 1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.done").value(true));
     }
+
+    @Test
+    void should_return_deleted_todo() throws Exception {
+        // Given
+        Todo firstTodo = todoRepository.findAll().get(0);
+
+        // When
+        client.perform(MockMvcRequestBuilders.delete(String.format("/todos/%d", firstTodo.getId())))
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.text").value(firstTodo.getText()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.done").value(firstTodo.getDone()));
+    }
 }

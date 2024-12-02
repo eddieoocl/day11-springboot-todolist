@@ -39,4 +39,15 @@ public class TodoController {
         }
         return todo;
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Todo delete(@PathVariable Integer id) {
+        Todo todo = todoService.delete(id);
+        if (todo == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return todo;
+    }
+
 }

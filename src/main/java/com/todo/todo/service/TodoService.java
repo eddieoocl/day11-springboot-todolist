@@ -36,4 +36,13 @@ public class TodoService {
         }
         return todoRepository.save(TodoMapper.toEntity(id, editTodoRequest));
     }
+
+    public Todo delete(int id) {
+        Todo todo = this.findById(id);
+        if (todo == null) {
+            return null;
+        }
+        todoRepository.deleteById(id);
+        return todo;
+    }
 }
