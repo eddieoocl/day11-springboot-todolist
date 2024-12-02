@@ -33,6 +33,10 @@ public class TodoControllerTest {
     @Autowired
     private JacksonTester<List<Todo>> todoListJacksonTester;
 
+    @Autowired
+    private JacksonTester<Todo> todoJacksonTester;
+
+
     @BeforeEach
     void setup() {
         todoRepository.deleteAll();
@@ -60,5 +64,19 @@ public class TodoControllerTest {
         assertThat(fetchedTodos)
                 .usingRecursiveFieldByFieldElementComparator()
                 .isEqualTo(givenTodos);
+    }
+
+    @Test
+    void should_return_created_todo() throws Exception {
+        // Given
+        String text = "Todo item 1";
+        String requestBody = String.format("{\"text\": \"%s\" }", text);
+
+        // When
+        client.perform(MockMvcRequestBuilders.post("/todos"))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.text").value(text))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.done").value(false));
     }
 }

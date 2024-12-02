@@ -14,6 +14,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
