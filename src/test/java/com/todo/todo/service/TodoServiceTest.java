@@ -57,17 +57,17 @@ public class TodoServiceTest {
     void should_return_edited_todo_when_edit() {
         //given
         Todo todo = new Todo(1, "Todo item 1", false);
+        Todo expectedEditedTodo = new Todo(1, "Edited todo item 1", true);
         when(mockedTodoRepository.findById(any())).thenReturn(Optional.of(todo));
+        when(mockedTodoRepository.save(any())).thenReturn(expectedEditedTodo);
 
         //when
-        String text = "Edited todo item 1";
-        Boolean done = true;
-
-        Todo editedTodo = todoService.edit(todo.getId(), new EditTodoRequest(text, done));
+        Todo editedTodo = todoService.edit(todo.getId(), new EditTodoRequest(expectedEditedTodo.getText(), expectedEditedTodo.getDone()));
 
         //then
-        assertEquals(text, editedTodo.getText());
-        assertEquals(done, editedTodo.getDone());
+        assertEquals(expectedEditedTodo.getId(), editedTodo.getId());
+        assertEquals(expectedEditedTodo.getText(), editedTodo.getText());
+        assertEquals(expectedEditedTodo.getDone(), editedTodo.getDone());
     }
 
     @Test
