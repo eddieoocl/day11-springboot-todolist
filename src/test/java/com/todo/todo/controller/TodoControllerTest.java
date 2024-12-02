@@ -67,6 +67,21 @@ public class TodoControllerTest {
     }
 
     @Test
+    void should_return_todo_when_find_by_id() throws Exception {
+        // Given
+        final Todo todo = todoRepository.findAll().get(0);
+
+        // When
+        // Then
+        client.perform(MockMvcRequestBuilders.get(String.format("/todos/%d", todo.getId())))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.text").value(todo.getText()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.done").value(todo.getDone()));
+    }
+
+
+    @Test
     void should_return_created_todo() throws Exception {
         // Given
         String text = "Todo item 1";

@@ -21,8 +21,17 @@ public class TodoController {
     private final TodoService todoService;
 
     @GetMapping
-    public List<Todo> getCompanies() {
+    public List<Todo> getAll() {
         return todoService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Todo getById(@PathVariable Integer id) {
+        Todo todo = todoService.findById(id);
+        if (todo == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return todo;
     }
 
     @PostMapping

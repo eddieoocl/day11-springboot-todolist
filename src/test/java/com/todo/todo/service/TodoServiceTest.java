@@ -40,6 +40,21 @@ public class TodoServiceTest {
     }
 
     @Test
+    void should_return_todo_when_getById() {
+        //given
+        Todo todo = new Todo(1, "Todo item 1", false);
+        when(mockedTodoRepository.findById(any())).thenReturn(Optional.of(todo));
+
+        //when
+        Todo fetchedTodo = todoService.findById(todo.getId());
+
+        //then
+        assertEquals(todo.getId(), fetchedTodo.getId());
+        assertEquals(todo.getText(), fetchedTodo.getText());
+        assertEquals(todo.getDone(), fetchedTodo.getDone());
+    }
+
+    @Test
     void should_return_created_todo_when_create() {
         //given
         Todo todo = new Todo(1, "Todo item 1", false);
