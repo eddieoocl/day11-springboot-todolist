@@ -73,10 +73,33 @@ public class TodoControllerTest {
         String requestBody = String.format("{\"text\": \"%s\" }", text);
 
         // When
-        client.perform(MockMvcRequestBuilders.post("/todos"))
+        client.perform(MockMvcRequestBuilders.post("/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.text").value(text))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.done").value(false));
+    }
+
+    @Test
+    void should_return_edited_todo() throws Exception {
+        // Given
+        Todo firstTodo = todoRepository.findAll().get(0);
+        String requestBody = """
+                 {
+                    "text": "Edited todo item 1",
+                    "done": true
+                 }\
+                """;
+
+        // When
+        client.perform(MockMvcRequestBuilders.put(String.format("/todos/%d", firstTodo.getId()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.text").value("Edited todo item 1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.done").value(true));
     }
 }
